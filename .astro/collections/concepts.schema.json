@@ -1,0 +1,48 @@
+{
+  "$ref": "#/definitions/concepts",
+  "definitions": {
+    "concepts": {
+      "type": "object",
+      "properties": {
+        "concept_id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "canonical_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "gloss_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "derived": {
+          "type": "boolean",
+          "const": true
+        },
+        "authority_level": {
+          "type": "string",
+          "const": "concept"
+        },
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "concept_id",
+        "label",
+        "canonical_refs",
+        "derived",
+        "authority_level"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

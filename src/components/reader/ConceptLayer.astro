@@ -1,0 +1,15 @@
+---
+const { concepts } = Astro.props;
+---
+<section data-authority="concept">
+  <h3>Concepts</h3>
+
+  <ul>
+    {concepts.map((c) => (
+      <li>
+        <strong>{c.data.label}</strong>
+        {c.body && <p>{c.body}</p>}
+      </li>
+    ))}
+  </ul>
+</section>

@@ -1,0 +1,25 @@
+---
+const { commentary } = Astro.props;
+---
+
+<section data-authority="commentary-translation">
+  <header>
+    <strong>Commentary (Translation)</strong>
+    <span>
+      — {commentary.data.commentator}
+      {commentary.data.language && ` (${commentary.data.language})`}
+    </span>
+  </header>
+
+  <div>
+    <p>{commentary.body}</p>
+  </div>
+
+  <footer>
+    <small>
+      Translates: {commentary.data.translates_commentary_id}
+      <br />
+      Referenced Canon: {commentary.data.cka_id}
+    </small>
+  </footer>
+</section>

@@ -9,15 +9,22 @@ import { CommentarySchema } from "./commentary/schema";
 import { PrincipleSchema } from "./principles/schema";
 import { SkillSchema } from "./skills/schema";
 import { GuidanceSchema } from "./guidance/schema";
+import { SynonymSchema } from "./synonyms/schema";
+
+
 
 export const collections = {
   scripture: defineCollection({ type: "content", schema: CanonSchema }),
   gloss: defineCollection({ type: "content", schema: GlossSchema }),
   concepts: defineCollection({ type: "content", schema: ConceptSchema }),
   entities: defineCollection({ type: "content", schema: EntitySchema }),
+  synonyms: defineCollection({ type: "content", schema: SynonymSchema,}),
   translations: defineCollection({ type: "content", schema: TranslationSchema }),
   commentary: defineCollection({ type: "content", schema: CommentarySchema }),
   principles: defineCollection({ type: "content", schema: PrincipleSchema }),
   skills: defineCollection({ type: "content", schema: SkillSchema }),
   guidance: defineCollection({ type: "content", schema: GuidanceSchema }),
+  
+
+
 };

@@ -1,0 +1,49 @@
+{
+  "$ref": "#/definitions/entities",
+  "definitions": {
+    "entities": {
+      "type": "object",
+      "properties": {
+        "entity_id": {
+          "type": "string"
+        },
+        "entity_type": {
+          "type": "string",
+          "enum": [
+            "person",
+            "place",
+            "event",
+            "circumstance"
+          ]
+        },
+        "cka_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "derived": {
+          "type": "boolean",
+          "const": true
+        },
+        "authority_level": {
+          "type": "string",
+          "const": "entity"
+        },
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "entity_id",
+        "entity_type",
+        "cka_ids",
+        "derived",
+        "authority_level"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

@@ -1,0 +1,16 @@
+---
+const { glosses } = Astro.props;
+---
+<section data-authority="gloss">
+  <h3>Gloss</h3>
+
+  <ul>
+    {glosses.map((g) => (
+      <li>
+        <strong>{g.data.term}</strong>
+        {g.data.transliteration && ` (${g.data.transliteration})`}
+        — {g.data.meaning_range.join(", ")}
+      </li>
+    ))}
+  </ul>
+</section>

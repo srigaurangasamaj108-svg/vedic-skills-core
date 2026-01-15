@@ -1,0 +1,49 @@
+{
+  "$ref": "#/definitions/translations",
+  "definitions": {
+    "translations": {
+      "type": "object",
+      "properties": {
+        "translation_id": {
+          "type": "string"
+        },
+        "canonical_ref": {
+          "type": "string"
+        },
+        "cka_id": {
+          "type": "string"
+        },
+        "translator": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "derived": {
+          "type": "boolean",
+          "const": true
+        },
+        "authority_level": {
+          "type": "string",
+          "const": "translation"
+        },
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "translation_id",
+        "canonical_ref",
+        "translator",
+        "language",
+        "derived",
+        "authority_level"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

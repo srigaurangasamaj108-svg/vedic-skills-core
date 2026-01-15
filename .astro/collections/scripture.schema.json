@@ -1,0 +1,90 @@
+{
+  "$ref": "#/definitions/scripture",
+  "definitions": {
+    "scripture": {
+      "type": "object",
+      "properties": {
+        "cka_id": {
+          "type": "string"
+        },
+        "source_category": {
+          "type": "string",
+          "enum": [
+            "sruti",
+            "smrti",
+            "itihasa",
+            "purana",
+            "agama"
+          ]
+        },
+        "canonical_rank": {
+          "type": "integer"
+        },
+        "source_tradition": {
+          "type": "string"
+        },
+        "source_text": {
+          "type": "string"
+        },
+        "chapter": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "verse": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string",
+          "const": "sa"
+        },
+        "script": {
+          "type": "string",
+          "const": "devanagari"
+        },
+        "speaker": {
+          "type": "string"
+        },
+        "listener": {
+          "type": "string"
+        },
+        "setting": {
+          "type": "string"
+        },
+        "prev": {
+          "type": "string"
+        },
+        "next": {
+          "type": "string"
+        },
+        "canonical": {
+          "type": "boolean",
+          "const": true
+        },
+        "immutable": {
+          "type": "boolean",
+          "const": true
+        }
+      },
+      "required": [
+        "cka_id",
+        "source_category",
+        "canonical_rank",
+        "source_tradition",
+        "source_text",
+        "chapter",
+        "verse",
+        "language",
+        "script",
+        "speaker",
+        "listener",
+        "setting",
+        "canonical",
+        "immutable"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

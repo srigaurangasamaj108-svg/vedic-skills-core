@@ -1,0 +1,123 @@
+---
+import { getEntry, getCollection } from "astro:content";
+
+import ReadingLayout from "../../components/layouts/ReadingLayout.astro";
+import CanonicalVerseBlock from "../../components/reader/CanonicalVerseBlock.astro";
+import SynonymBlock from "../../components/reader/SynonymBlock.astro";
+import TranslationBlock from "../../components/reader/TranslationBlock.astro";
+import CommentarySourceBlock from "../../components/reader/CommentarySourceBlock.astro";
+import CommentaryTranslationBlock from "../../components/reader/CommentaryTranslationBlock.astro";
+
+
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  throw new Error("Missing Canon slug");
+}
+
+const canon = await getEntry("scripture", slug.join("/"));
+
+if (!canon) {
+  throw new Error("Canonical atom not found");
+}
+
+// LEVEL 3A — Synonyms
+const synonyms = await getCollection("synonyms", ({ data }) =>
+  data.cka_id === canon.data.cka_id
+);
+
+// LEVEL 3B — Translations
+const translations = await getCollection("translations", ({ data }) =>
+  data.cka_id === canon.data.cka_id
+);
+
+// LEVEL 3B-C-S — Commentary Source (Sanskrit)
+const commentarySources = await getCollection("commentary", ({ data }) =>
+  data.cka_id === canon.data.cka_id && data.type === "source"
+);
+
+// LEVEL 3B-C-T — Commentary Translation
+const commentaryTranslations = await getCollection("commentary", ({ data }) =>
+  data.cka_id === canon.data.cka_id && data.type === "translation"
+);
+
+
+
+---
+<ReadingLayout>
+
+  <!-- LEVEL 0 — Canon -->
+  <CanonicalVerseBlock canon={canon} />
+
+  <section data-layers>
+
+    <!-- LEVEL 3A — Synonyms -->
+    {synonyms.length > 0 && (
+      <>
+        <button onclick="this.nextElementSibling.toggleAttribute('hidden')">
+          Show Synonyms
+        </button>
+
+        <div hidden>
+          {synonyms.map((s) => (
+            <SynonymBlock synonym={s} />
+          ))}
+        </div>
+      </>
+    )}
+
+    <!-- LEVEL 3B — Translation -->
+    {translations.length > 0 && (
+      <>
+        <button onclick="this.nextElementSibling.toggleAttribute('hidden')">
+          Show Translation
+        </button>
+
+        <div hidden>
+          {translations.map((t) => (
+            <TranslationBlock translation={t} />
+          ))}
+        </div>
+      </>
+    )}
+
+    <!-- LEVEL 3B — Commentary Source (Sanskrit) -->
+{commentarySources.length > 0 && (
+  <>
+    <button
+      onclick="this.nextElementSibling.toggleAttribute('hidden')"
+    >
+      Show Commentary (Source)
+    </button>
+
+    <div hidden>
+      {commentarySources.map((c) => (
+        <CommentarySourceBlock commentary={c} />
+      ))}
+    </div>
+  </>
+)}
+
+<!-- LEVEL 3B — Commentary Translation -->
+{commentaryTranslations.length > 0 && (
+  <>
+    <button
+      onclick="this.nextElementSibling.toggleAttribute('hidden')"
+    >
+      Show Commentary (Translation)
+    </button>
+
+    <div hidden>
+      {commentaryTranslations.map((c) => (
+        <CommentaryTranslationBlock commentary={c} />
+      ))}
+    </div>
+  </>
+)}
+
+
+
+  </section>
+
+</ReadingLayout>

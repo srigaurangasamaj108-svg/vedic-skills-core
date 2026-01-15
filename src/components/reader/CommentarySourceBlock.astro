@@ -1,0 +1,20 @@
+---
+const { commentary } = Astro.props;
+---
+
+<section data-authority="commentary-source">
+  <header>
+    <strong>Commentary (Source)</strong>
+    <span> — {commentary.data.commentator}</span>
+  </header>
+
+  <div>
+    <pre>{commentary.body}</pre>
+  </div>
+
+  <footer>
+    <small>
+      Referenced Canon: {commentary.data.cka_id}
+    </small>
+  </footer>
+</section>

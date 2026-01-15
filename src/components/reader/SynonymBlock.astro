@@ -1,0 +1,20 @@
+---
+const { synonym } = Astro.props;
+---
+
+<section data-authority="synonym">
+  <header>
+    <strong>Synonyms</strong>
+    <span>({synonym.data.source})</span>
+  </header>
+
+  <div>
+    {synonym.body}
+  </div>
+
+  <footer>
+    <small>
+      Referenced Canon: {synonym.data.cka_id}
+    </small>
+  </footer>
+</section>

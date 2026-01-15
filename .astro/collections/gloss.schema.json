@@ -1,0 +1,54 @@
+{
+  "$ref": "#/definitions/gloss",
+  "definitions": {
+    "gloss": {
+      "type": "object",
+      "properties": {
+        "term": {
+          "type": "string"
+        },
+        "transliteration": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string",
+          "const": "sa"
+        },
+        "meaning_range": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "canonical_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "derived": {
+          "type": "boolean",
+          "const": true
+        },
+        "authority_level": {
+          "type": "string",
+          "const": "gloss"
+        },
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "term",
+        "transliteration",
+        "language",
+        "meaning_range",
+        "canonical_refs",
+        "derived",
+        "authority_level"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

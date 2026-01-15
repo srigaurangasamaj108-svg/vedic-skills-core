@@ -66,5 +66,5 @@ createTranslation({
   translator_id: "a-c-bhaktivedanta-swami-prabhupada",
   language: "en",
   source: "bhagavad-gita-as-it-is",
-  canonical_ref: "itihasa/mahabharata/bhagavad-gita/02/12",
+  canonical_ref: "itihasa/mahabharata/bhagavad-gita/02/30",
 });

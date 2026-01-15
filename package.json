@@ -1,0 +1,17 @@
+{
+  "name": "vedic-skills",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "validate:graph": "node scripts/validate-dependency-graph.ts"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.3.13",
+    "astro": "^5.0.0",
+    "gray-matter": "^4.0.3",
+    "zod": "^3.25.76"
+  }
+}
