@@ -58,13 +58,24 @@ const LAYER_MAP: Record<string, Authority> = {
 };
 
 let hasError = false;
+const warnings: string[] = [];
 
 for (const [folder, authority] of Object.entries(LAYER_MAP)) {
   const files = scan(path.join(ROOT, folder));
 
-  for (const file of files) {
-    const raw = fs.readFileSync(file, "utf8");
+  for (const filePath of files) {
+    const raw = fs.readFileSync(filePath, "utf8");
     const { data } = matter(raw);
+
+    /* ---------------------------
+       Phase 12B — authority_scope
+    ---------------------------- */
+
+    if (!data.authority_scope) {
+      warnings.push(
+        `⚠️ Missing authority_scope in ${filePath}`
+      );
+    }
 
     const refs: string[] =
       data.references ||
@@ -76,24 +87,48 @@ for (const [folder, authority] of Object.entries(LAYER_MAP)) {
 
       if (!AUTHORITY_ORDER.includes(refLevel)) continue;
 
+      // 🔒 Core authority ordering rule
       if (authorityIndex(refLevel) < authorityIndex(authority)) {
         console.error(
           `❌ Authority violation:\n` +
-          `File: ${file}\n` +
+          `File: ${filePath}\n` +
           `Layer "${authority}" references higher authority "${refLevel}"`
         );
         hasError = true;
       }
 
-      // Extra safety: community restrictions
+      // 🔐 Community safety rule
       if (authority === "community" && refLevel === "canon") {
         console.error(
-          `❌ Community layer may not reference Canon directly:\n${file}`
+          `❌ Community layer may not reference Canon directly:\n${filePath}`
         );
         hasError = true;
       }
+
+      // 🔎 Phase 12B cross-scope warnings
+      if (
+        data.authority_scope === "sampradaya" &&
+        refLevel === "sampradaya"
+      ) {
+        warnings.push(
+          `⚠️ Sampradāya atom ${filePath} references another sampradāya atom (${ref}). Perspective declaration required.`
+        );
+      }
+
+      if (
+        data.authority_scope === "derived" &&
+        refLevel === "guidance"
+      ) {
+        warnings.push(
+          `⚠️ Derived atom ${filePath} references contextual guidance (${ref}). This is discouraged.`
+        );
+      }
     }
   }
+}
+
+for (const w of warnings) {
+  console.warn(w);
 }
 
 if (hasError) {

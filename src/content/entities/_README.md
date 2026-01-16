@@ -1,3 +1,6 @@
+---
+authority_scope: documentation
+---
 # Entities — LEVEL 2 (Persons, Places, Events)
 
 Entity atoms represent **contextual facts**:

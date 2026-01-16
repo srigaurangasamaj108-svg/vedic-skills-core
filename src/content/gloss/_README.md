@@ -1,3 +1,6 @@
+---
+authority_scope: documentation
+---
 # Gloss — LEVEL 1 (Lexical Meaning)
 
 Gloss atoms define the **primary lexical sense** of Sanskrit terms

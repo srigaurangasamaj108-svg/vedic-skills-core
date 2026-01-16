@@ -1,3 +1,6 @@
+---
+authority_scope: documentation
+---
 # Principles — LEVEL 4 (Declarative Truths)
 
 Principle atoms state **clear, minimal truths**

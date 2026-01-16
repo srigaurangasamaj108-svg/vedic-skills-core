@@ -74,6 +74,8 @@ export const CanonSchema = z.object({
    */
   locator: z.array(LocatorSegment).min(1),
 
+  authority_scope: z.literal("canon"),
+
   language: z.string(),
   script: z.string(),
 

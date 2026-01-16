@@ -245,4 +245,11 @@ The system does **not**:
 
 ---
 
+Appendix 
+
+Disclosure Law
+Any content with authority_scope !== "canon" MUST be visually disclosed as such.
+Sampradāya content MUST declare its lineage and dependent śāstra.
+Derived and contextual layers MUST never present themselves as universal doctrine.
+
 **End of ARCHITECTURE.md**

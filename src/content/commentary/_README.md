@@ -1,3 +1,6 @@
+---
+authority_scope: documentation
+---
 # Commentary — LEVEL 3 (Interpretive Explanation)
 
 Commentary atoms explain scripture

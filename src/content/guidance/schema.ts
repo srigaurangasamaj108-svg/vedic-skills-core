@@ -11,7 +11,7 @@ export const GuidanceSchema = z.object({
   skill_refs: z.array(z.string()),
   principle_refs: z.array(z.string()).optional(),
   concept_refs: z.array(z.string()).optional(),
-
+  authority_scope: z.literal("contextual"),
   derived: z.literal(true),
   authority_level: z.literal("guidance"),
 });

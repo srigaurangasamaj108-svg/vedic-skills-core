@@ -1,3 +1,6 @@
+---
+authority_scope: documentation
+---
 # Skills — LEVEL 5 (Human Capacities)
 
 Skill atoms describe **capabilities a person can develop**

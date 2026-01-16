@@ -1,3 +1,6 @@
+---
+authority_scope: documentation
+---
 # Guidance — LEVEL 6 (Contextual Application)
 
 Guidance atoms offer **situational reflection**

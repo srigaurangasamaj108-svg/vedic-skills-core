@@ -1,3 +1,6 @@
+---
+authority_scope: documentation
+---
 # Content — Authority Layer Model
 
 This directory contains **all content atoms** for the Vedic Skills platform.

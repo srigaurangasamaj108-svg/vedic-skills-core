@@ -1,3 +1,6 @@
+---
+authority_scope: documentation
+---
 # LEVEL 9 — Community
 
 This layer contains **participatory and social structures**.

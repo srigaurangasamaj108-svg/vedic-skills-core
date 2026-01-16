@@ -1,3 +1,6 @@
+---
+authority_scope: documentation
+---
 # LEVEL 8 — Courses
 
 This layer contains **pedagogical sequencing**.

@@ -1,3 +1,6 @@
+---
+authority_scope: documentation
+---
 # Sampradāya — Interpretive Traditions
 
 Sampradāya content represents

@@ -1,3 +1,6 @@
+---
+authority_scope: documentation
+---
 # Scripture — LEVEL 0 Canonical Content
 
 This directory contains **LEVEL 0 canonical scripture**.

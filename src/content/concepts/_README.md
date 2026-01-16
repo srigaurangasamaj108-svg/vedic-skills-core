@@ -1,3 +1,6 @@
+---
+authority_scope: documentation
+---
 # Concepts — LEVEL 1 (Semantic Patterns)
 
 Concept atoms describe **recurring semantic structures**

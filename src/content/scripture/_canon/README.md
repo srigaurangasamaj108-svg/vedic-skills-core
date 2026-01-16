@@ -1,3 +1,6 @@
+---
+authority_scope: documentation
+---
 # _canon — Canonical Infrastructure (LEVEL 0)
 
 This directory contains **mechanical infrastructure files**

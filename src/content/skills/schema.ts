@@ -9,7 +9,8 @@ export const SkillSchema = z.object({
   principle_refs: z.array(z.string()),
   concept_refs: z.array(z.string()).optional(),
   gloss_refs: z.array(z.string()).optional(),
-
+  authority_scope: z.literal("derived"),
+ 
   derived: z.literal(true),
   authority_level: z.literal("skill"),
 });

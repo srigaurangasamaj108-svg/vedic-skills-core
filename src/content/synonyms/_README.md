@@ -1,3 +1,6 @@
+---
+authority_scope: documentation
+---
 # Synonyms — LEVEL 3A (Padārtha Atoms)
 
 Synonym atoms provide **word-by-word meanings**

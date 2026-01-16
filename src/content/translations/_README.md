@@ -1,3 +1,6 @@
+---
+authority_scope: documentation
+---
 # Translations — LEVEL 3 (Language Rendering)
 
 Translations render canonical text
