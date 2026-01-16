@@ -3,106 +3,100 @@ import path from "path";
 import matter from "gray-matter";
 
 /**
- * Authority levels in strict order.
- * Lower index = higher authority.
+ * Authority order (lower index = stronger authority)
  */
 const AUTHORITY_ORDER = [
-  "scripture",    // LEVEL 0
-  "gloss",        // LEVEL 1
-  "concepts",     // LEVEL 1
-  "entities",     // LEVEL 2
-  "synonyms",     // LEVEL 3A
-  "translations", // LEVEL 3B
-  "commentary",   // LEVEL 3B
-  "principles",   // LEVEL 4
-  "skills",       // LEVEL 5
-  "guidance",     // LEVEL 6
-  "sampradaya",   // interpretive layer
+  "canon",        // 0
+  "gloss",        // 1
+  "concept",      // 1
+  "entity",       // 2
+  "synonym",      // 3A
+  "translation",  // 3B
+  "commentary",   // 3B
+  "principle",    // 4
+  "skill",        // 5
+  "guidance",     // 6
+  "compilation",  // 7
+  "course",       // 8
+  "community",    // 9
 ] as const;
 
 type Authority = typeof AUTHORITY_ORDER[number];
 
-const CONTENT_ROOT = path.join(process.cwd(), "src/content");
-
-/**
- * Determine authority level from file path.
- */
-function detectAuthority(filePath: string): Authority | null {
-  const parts = filePath.split(path.sep);
-  const idx = parts.indexOf("content");
-  if (idx === -1) return null;
-  const layer = parts[idx + 1] as Authority;
-  return AUTHORITY_ORDER.includes(layer) ? layer : null;
+function authorityIndex(level: Authority): number {
+  return AUTHORITY_ORDER.indexOf(level);
 }
 
-/**
- * Load all MD/MDX files recursively.
- */
-function getAllContentFiles(dir: string): string[] {
-  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
-    const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) return getAllContentFiles(full);
-    if (entry.name.endsWith(".md") || entry.name.endsWith(".mdx")) return [full];
-    return [];
-  });
+function scan(dir: string): string[] {
+  if (!fs.existsSync(dir)) return [];
+  return fs
+    .readdirSync(dir, { withFileTypes: true })
+    .flatMap((entry) => {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) return scan(full);
+      if (entry.name.endsWith(".md") || entry.name.endsWith(".mdx")) return [full];
+      return [];
+    });
 }
 
-/**
- * Extract explicit dependencies from frontmatter.
- */
-function extractDependencies(data: any): string[] {
-  return [
-    ...(data.depends_on ?? []),
-    ...(data.references ?? []),
-    ...(data.cites ?? []),
-  ];
-}
+const ROOT = path.join(process.cwd(), "src/content");
 
-/**
- * MAIN
- */
-const files = getAllContentFiles(CONTENT_ROOT);
+const LAYER_MAP: Record<string, Authority> = {
+  scripture: "canon",
+  gloss: "gloss",
+  concepts: "concept",
+  entities: "entity",
+  synonyms: "synonym",
+  translations: "translation",
+  commentary: "commentary",
+  principles: "principle",
+  skills: "skill",
+  guidance: "guidance",
+  compilations: "compilation",
+  courses: "course",
+  community: "community",
+};
 
-const errors: string[] = [];
+let hasError = false;
 
-for (const file of files) {
-  const raw = fs.readFileSync(file, "utf8");
-  const { data } = matter(raw);
+for (const [folder, authority] of Object.entries(LAYER_MAP)) {
+  const files = scan(path.join(ROOT, folder));
 
-  const fromAuthority = detectAuthority(file);
-  if (!fromAuthority) continue;
+  for (const file of files) {
+    const raw = fs.readFileSync(file, "utf8");
+    const { data } = matter(raw);
 
-  const fromIndex = AUTHORITY_ORDER.indexOf(fromAuthority);
-  const deps = extractDependencies(data);
+    const refs: string[] =
+      data.references ||
+      data.syllabus ||
+      [];
 
-  for (const dep of deps) {
-    const target = files.find((f) => f.includes(dep));
-    if (!target) {
-      errors.push(`Missing dependency: ${dep} (referenced in ${file})`);
-      continue;
+    for (const ref of refs) {
+      const refLevel = ref.split(":")[0] as Authority;
+
+      if (!AUTHORITY_ORDER.includes(refLevel)) continue;
+
+      if (authorityIndex(refLevel) < authorityIndex(authority)) {
+        console.error(
+          `❌ Authority violation:\n` +
+          `File: ${file}\n` +
+          `Layer "${authority}" references higher authority "${refLevel}"`
+        );
+        hasError = true;
+      }
+
+      // Extra safety: community restrictions
+      if (authority === "community" && refLevel === "canon") {
+        console.error(
+          `❌ Community layer may not reference Canon directly:\n${file}`
+        );
+        hasError = true;
+      }
     }
-
-    const toAuthority = detectAuthority(target);
-    if (!toAuthority) continue;
-
-    const toIndex = AUTHORITY_ORDER.indexOf(toAuthority);
-
-    if (toIndex < fromIndex) {
-      // OK: downward dependency
-      continue;
-    }
-
-    errors.push(
-      `Authority violation:
-${file} (${fromAuthority})
-→ depends on ${target} (${toAuthority})`
-    );
   }
 }
 
-if (errors.length) {
-  console.error("❌ Dependency graph validation failed:\n");
-  errors.forEach((e) => console.error(e));
+if (hasError) {
   process.exit(1);
 }
 
