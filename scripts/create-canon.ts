@@ -1,50 +1,49 @@
 import fs from "fs";
 import path from "path";
 
-type CanonInput = {
-  chapter: number;
-  verse: number;
-  speaker: string;
-  listener: string;
-};
+/**
+ * create-canon.ts
+ *
+ * Scaffolds a LEVEL-0 Canonical Knowledge Atom.
+ * This script does NOT infer textual structure.
+ * Canonical location is expressed via the `locator` array,
+ * which must be filled manually according to tradition.
+ */
 
-const BASE =
-  "src/content/scripture/itihasa/mahabharata/bhagavad-gita";
+const [, , relativePath] = process.argv;
 
-function pad(n: number) {
-  return n.toString().padStart(2, "0");
+if (!relativePath) {
+  console.error(
+    "❌ Usage: node create-canon.ts <relative-path-from-scripture/>"
+  );
+  process.exit(1);
 }
 
-function createCanonVerse(input: CanonInput) {
-  const chapterDir = path.join(BASE, pad(input.chapter));
-  fs.mkdirSync(chapterDir, { recursive: true });
+const fullPath = path.join(
+  process.cwd(),
+  "src/content/scripture",
+  relativePath
+);
 
-  const file = path.join(chapterDir, `${pad(input.verse)}.mdx`);
+if (fs.existsSync(fullPath)) {
+  console.error("❌ Canonical file already exists:", fullPath);
+  process.exit(1);
+}
 
-  if (fs.existsSync(file)) {
-    console.error(`❌ File exists: ${file}`);
-    return;
-  }
+fs.mkdirSync(path.dirname(fullPath), { recursive: true });
 
-  const frontmatter =
-`---
-cka_id: bg-${pad(input.chapter)}-${pad(input.verse)}
+const frontmatter = `---
+cka_id: ""
+source_category: ""
+source_tradition: ""
+source_text: ""
 
-source_category: itihasa
-canonical_rank: 3
-
-source_tradition: mahabharata
-source_text: bhagavad-gita
-
-chapter: ${input.chapter}
-verse: "${input.verse}"
+locator:
+  - level: ""
+    value: ""
 
 language: sa
 script: devanagari
-
-speaker: ${input.speaker}
-listener: ${input.listener}
-setting: battlefield-of-kurukshetra
 
 canonical: true
 immutable: true
@@ -52,14 +51,6 @@ immutable: true
 
 `;
 
-  fs.writeFileSync(file, frontmatter, { encoding: "utf8" });
-  console.log(`✅ Created ${file}`);
-}
+fs.writeFileSync(fullPath, frontmatter, "utf8");
 
-/* EXAMPLE */
-createCanonVerse({
-  chapter: 2,
-  verse: 31,
-  speaker: "sri-krishna",
-  listener: "arjuna",
-});
+console.log("✅ Canon scaffold created:", fullPath);

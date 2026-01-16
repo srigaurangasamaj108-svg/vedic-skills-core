@@ -1,135 +1,109 @@
-import fs from "node:fs";
-import path from "node:path";
+import fs from "fs";
+import path from "path";
 import matter from "gray-matter";
 
 /**
- * Constitutional authority levels
+ * Authority levels in strict order.
+ * Lower index = higher authority.
  */
-const LEVELS: Record<string, number> = {
-  scripture: 0,
-  gloss: 1,
-  concepts: 1,
-  entities: 2,
-  translations: 3,
-  commentary: 3,
-  principles: 4,
-  skills: 5,
-  guidance: 6,
-};
+const AUTHORITY_ORDER = [
+  "scripture",    // LEVEL 0
+  "gloss",        // LEVEL 1
+  "concepts",     // LEVEL 1
+  "entities",     // LEVEL 2
+  "synonyms",     // LEVEL 3A
+  "translations", // LEVEL 3B
+  "commentary",   // LEVEL 3B
+  "principles",   // LEVEL 4
+  "skills",       // LEVEL 5
+  "guidance",     // LEVEL 6
+  "sampradaya",   // interpretive layer
+] as const;
 
-type Node = {
-  id: string;
-  level: number;
-  deps: string[];
-};
+type Authority = typeof AUTHORITY_ORDER[number];
+
+const CONTENT_ROOT = path.join(process.cwd(), "src/content");
 
 /**
- * Recursively collect .md / .mdx files
+ * Determine authority level from file path.
  */
-function collectFiles(dir: string): string[] {
-  if (!fs.existsSync(dir)) return [];
+function detectAuthority(filePath: string): Authority | null {
+  const parts = filePath.split(path.sep);
+  const idx = parts.indexOf("content");
+  if (idx === -1) return null;
+  const layer = parts[idx + 1] as Authority;
+  return AUTHORITY_ORDER.includes(layer) ? layer : null;
+}
 
+/**
+ * Load all MD/MDX files recursively.
+ */
+function getAllContentFiles(dir: string): string[] {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) return collectFiles(full);
+    if (entry.isDirectory()) return getAllContentFiles(full);
     if (entry.name.endsWith(".md") || entry.name.endsWith(".mdx")) return [full];
     return [];
   });
 }
 
 /**
- * Load all atoms directly from disk
+ * Extract explicit dependencies from frontmatter.
  */
-function loadNodes(): Map<string, Node> {
-  const nodes = new Map<string, Node>();
-
-  for (const [collection, level] of Object.entries(LEVELS)) {
-    const root = path.join("src/content", collection);
-    const files = collectFiles(root);
-
-    for (const file of files) {
-      const raw = fs.readFileSync(file, "utf8");
-      const { data } = matter(raw);
-
-      const slug = path
-        .relative(root, file)
-        .replace(/\.(md|mdx)$/, "");
-
-      const id = `${collection}:${slug}`;
-      const deps: string[] = [];
-
-    if (collection !== "scripture") {
-  if (data.canonical_ref) {
-    deps.push(`scripture:${data.canonical_ref}`);
-  }
-
-  if (Array.isArray(data.canonical_refs)) {
-    for (const ref of data.canonical_refs) {
-      deps.push(`scripture:${ref}`);
-    }
-  }
-}
-
-
-      nodes.set(id, { id, level, deps });
-    }
-  }
-
-  return nodes;
+function extractDependencies(data: any): string[] {
+  return [
+    ...(data.depends_on ?? []),
+    ...(data.references ?? []),
+    ...(data.cites ?? []),
+  ];
 }
 
 /**
- * Enforce downward-only authority
+ * MAIN
  */
-function enforceDirection(nodes: Map<string, Node>) {
-  for (const node of nodes.values()) {
-    for (const depId of node.deps) {
-      const dep = nodes.get(depId);
-      if (!dep) {
-        throw new Error(`Missing dependency: ${node.id} → ${depId}`);
-      }
-      if (dep.level >= node.level) {
-        throw new Error(
-          `Illegal dependency: ${node.id} (L${node.level}) → ${dep.id} (L${dep.level})`
-        );
-      }
+const files = getAllContentFiles(CONTENT_ROOT);
+
+const errors: string[] = [];
+
+for (const file of files) {
+  const raw = fs.readFileSync(file, "utf8");
+  const { data } = matter(raw);
+
+  const fromAuthority = detectAuthority(file);
+  if (!fromAuthority) continue;
+
+  const fromIndex = AUTHORITY_ORDER.indexOf(fromAuthority);
+  const deps = extractDependencies(data);
+
+  for (const dep of deps) {
+    const target = files.find((f) => f.includes(dep));
+    if (!target) {
+      errors.push(`Missing dependency: ${dep} (referenced in ${file})`);
+      continue;
     }
+
+    const toAuthority = detectAuthority(target);
+    if (!toAuthority) continue;
+
+    const toIndex = AUTHORITY_ORDER.indexOf(toAuthority);
+
+    if (toIndex < fromIndex) {
+      // OK: downward dependency
+      continue;
+    }
+
+    errors.push(
+      `Authority violation:
+${file} (${fromAuthority})
+→ depends on ${target} (${toAuthority})`
+    );
   }
 }
 
-/**
- * Detect cycles
- */
-function detectCycles(nodes: Map<string, Node>) {
-  const visited = new Set<string>();
-  const stack = new Set<string>();
-
-  function visit(id: string) {
-    if (stack.has(id)) throw new Error(`Cycle detected at ${id}`);
-    if (visited.has(id)) return;
-
-    visited.add(id);
-    stack.add(id);
-
-    const node = nodes.get(id);
-    if (node) for (const dep of node.deps) visit(dep);
-
-    stack.delete(id);
-  }
-
-  for (const id of nodes.keys()) visit(id);
-}
-
-/**
- * Run validator
- */
-try {
-  const nodes = loadNodes();
-  enforceDirection(nodes);
-  detectCycles(nodes);
-  console.log("✅ Dependency graph validation passed.");
-} catch (err) {
-  console.error("❌ Dependency graph validation failed.");
-  console.error(err);
+if (errors.length) {
+  console.error("❌ Dependency graph validation failed:\n");
+  errors.forEach((e) => console.error(e));
   process.exit(1);
 }
+
+console.log("✅ Dependency graph validation passed.");
