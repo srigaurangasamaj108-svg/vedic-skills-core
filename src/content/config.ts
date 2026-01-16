@@ -44,6 +44,9 @@ import { PrincipleSchema } from "./principles/schema";
 import { SkillSchema } from "./skills/schema";
 import { GuidanceSchema } from "./guidance/schema";
 import { SampradayaSchema } from "./sampradaya/schema";
+import { CompilationSchema } from "./compilations/schema";
+import { CourseSchema } from "./courses/schema";
+import { CommunitySchema } from "./community/schema";
 
 
 
@@ -116,4 +119,8 @@ export const collections = {
     type: "content",
     schema: SampradayaSchema,
   }),
+  // Phase 11B additions
+  compilations: defineCollection({ type: "content", schema: CompilationSchema }),
+  courses: defineCollection({ type: "content", schema: CourseSchema }),
+  community: defineCollection({ type: "content", schema: CommunitySchema }),
 };
