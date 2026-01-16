@@ -4,6 +4,10 @@ import path from "node:path";
 /**
  * CONFIG — adjust only if constitution changes
  */
+
+# authority_scope: derived
+
+
 const TRANSLATIONS_ROOT = "src/content/translations";
 
 type TranslationInput = {

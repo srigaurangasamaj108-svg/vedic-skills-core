@@ -1,3 +1,10 @@
+/**
+ * NOTE:
+ * This script reads `authority_scope` but never assigns or mutates it.
+ * Authority is declarative and constitution-governed.
+ */
+
+
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";

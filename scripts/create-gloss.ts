@@ -4,6 +4,9 @@ import path from "node:path";
 /**
  * CONFIG — locked by constitution
  */
+
+# authority_scope: derived
+
 const GLOSS_ROOT = "src/content/gloss";
 
 type GlossInput = {

@@ -10,6 +10,8 @@ import path from "path";
  * which must be filled manually according to tradition.
  */
 
+# authority_scope: canon
+
 const [, , relativePath] = process.argv;
 
 if (!relativePath) {

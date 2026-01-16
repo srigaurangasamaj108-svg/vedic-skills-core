@@ -1,0 +1,127 @@
+
+VKAD-01 — Canon Doctrine
+(Final · Constitution-Locked · Implementation-Aligned)
+This doctrine defines what Canon is, where it lives, what it may contain,and what it must never contain in the Vedic Skills system.
+No schema, script, UI, automation, AI behavior, or governance decisionmay violate this doctrine.
+If a conflict arises:
+👉 Canon prevails.👉 Automation must fail.👉 UI must change.
+
+1. Definition of Canon
+Canon refers exclusively to Canonical Knowledge Atoms (CKA).
+A CKA is:
+• the smallest indivisible unit of śāstra• preserved verbatim in the original language• immutable• sequential• context-descriptive only• authority-complete in itself
+Canon is received, never authored.
+
+2. Canonical Knowledge Atom (CKA)
+Each CKA represents:
+• one verse (śloka / mantra / sūtra), or• the smallest authoritative textual unit where verses do not apply
+Each CKA:
+• exists in exactly one file• has one canonical location• may be referenced but never duplicated
+There is:
+• no theme without CKAs• no principle without CKAs• no guidance without CKAs
+
+3. Canonical Authority Stack (LOCKED)
+The canonical corpus is structured as a non-linear authority graph, not a ladder.
+The recognized LEVEL-0 Canon corpora are:
+	1	Śruti — apauruṣeya revelation
+	2	Smṛti — remembered application of Śruti
+	3	Itihāsa — narrative Smṛti
+	4	Purāṇa — theological Smṛti
+	5	Āgama / Tantra — ritual systems aligned with Śruti
+	6	Vedāṅga — auxiliary limbs preserving Śruti
+	7	Upaveda — applied śāstra derived from Veda
+	8	Darśana — philosophical interpretation via sūtra
+Authority Rules
+• This stack applies only to Canon (LEVEL-0)• Authority is declared, never inferred• Derived layers may read this authority• Derived layers may never override it
+
+4. Sampradāya Is NOT Canon (CRITICAL)
+Sampradāya (e.g. Gauḍīya Vaiṣṇavism) is:
+• a living interpretive tradition• grounded in Canon• historically situated• devotional and hermeneutical
+Therefore:
+❌ Sampradāya is not Canon❌ Sampradāya does not add authority❌ Sampradāya does not override hierarchy
+Sampradāya lives in:
+src/content/sampradaya/
+and carries its own declared:
+authority_scope: "sampradaya"
+
+5. Canon Folder Law (ABSOLUTE)
+All Canon must live only under:
+src/content/scripture/
+The folder path encodes corpus membership, not interpretation.
+Valid example:
+src/content/scripture/
+└── itihasa/
+    └── mahabharata/
+        └── bhisma-parva/
+            └── bhagavad-gita/
+                └── 02/
+                    └── 13.mdx
+No other content type may live here.
+
+6. Canon Metadata Law (IDENTITY ONLY)
+Every Canon file must include:
+• cka_id• source_category• source_tradition• source_text• locator[] (ordered, lossless, tradition-aware)• language• script• authority_scope: "canon"
+Optional Context (DESCRIPTIVE ONLY)
+Allowed:
+• speaker• listener• setting
+Forbidden:
+❌ meanings❌ intentions❌ theology❌ psychology❌ explanation❌ UI hints
+
+7. Canon Body Rules (NON-NEGOTIABLE)
+The body of a CKA file must contain:
+• verbatim scripture only• in the original language• without interpretation• without JSX• without formatting emphasis
+Explicit Prohibitions
+Canon must never contain:
+❌ translations❌ synonyms❌ glosses❌ anvaya❌ commentary❌ summaries❌ headings❌ pedagogy❌ guidance
+Canon is source, not content.
+
+8. Canon vs Lexical Meaning (STRUCTURAL LAW)
+Lexical meaning is not Canon.
+Therefore:
+• Gloss atoms (cross-verse semantic range)• Synonym atoms (verse-specific padārtha)
+are explicitly excluded from Canon.
+They live in derived layers with declared authority:
+Layer
+authority_scope
+Gloss
+derived
+Synonym
+derived
+Translation
+derived
+Commentary
+derived
+This preserves the traditional flow:
+pāṭha → padārtha → anvaya → bhāṣya,encoded structurally — not informally.
+
+9. Immutability Doctrine
+Canon is immutable by law.
+Enforced via:
+• schema constraints• folder isolation• validator scripts• dependency graph checks• governance rules
+Any Canon change requires:
+• explicit declaration• documented rationale• versioned approval
+Silence ≠ consent.
+
+10. Supremacy Rule
+If any derived layer conflicts with Canon:
+→ Canon prevails
+If any automation conflicts with Canon:
+→ Automation must fail
+If any UI obscures Canon:
+→ UI must change
+Canon is the final reference, not the loudest voice.
+
+11. Automation Subordination Law
+Automation is a gatekeeper, never an author.
+Automation MAY:
+• scaffold files• validate schemas• enforce authority boundaries• detect violations
+Automation MAY NOT:
+❌ invent doctrine❌ harmonize scripture❌ interpret verses❌ generate guidance❌ act as guru
+AI is a scribe, never a teacher.
+
+12. Constitutional Priority
+If any document, schema, component, script, or practiceconflicts with this doctrine:
+👉 VKAD-01 prevails.
+
+End of VKAD-01 — Canon Doctrine
+
